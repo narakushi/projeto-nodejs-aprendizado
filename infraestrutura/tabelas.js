@@ -13,8 +13,7 @@ class Tabelas {
     SERVICO VARCHAR(100),
     CLIENT VARCHAR(100),
     STATUS ENUM("ativo", "realizado", "cancelado") DEFAULT "ativo"
-  );
-    `;
+  );`;
 
     this.conexao.query(sql, (error) => {
       if (error) {
