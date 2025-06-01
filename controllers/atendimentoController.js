@@ -1,17 +1,29 @@
 const atendimentoModel = require("../models/atendimentoModel");
 
 class AtendimentoController {
-  buscar() {
-    return atendimentoModel.listar();
+  buscar(req, res) {
+    const listaAtendimentos = atendimentoModel.listar(); //integrando model
+    return listaAtendimentos.then(atendimentos => res.status(200).json(atendimentos))
+      .catch(error => res.status(400).json(error.message))
   }
-  criar(novoAtendimento) {
-    return atendimentoModel.criar(novoAtendimento);
+  criar(req, res) {
+    const novoAtendimento = req.query; //req.body não estava funcionando
+    const atendimento = atendimentoModel.criar(novoAtendimento);
+    return atendimento.then(atendimentoCriado => res.status(201).json(atendimentoCriado))
+      .catch(error => res.status(400).json(error.message));
   }
-  atualizar(atendimentoAtualizado, id) {
-    return atendimentoModel.atualizar(atendimentoAtualizado, id);
+  atualizar(req, res) {
+    const { id } = req.params;
+    const atendimentoAtualizado = req.query;
+    const atendimento = atendimentoModel.atualizar(atendimentoAtualizado, id);
+    return atendimento.then((resultAtendimentoAtualizado) => res.status(200).json(resultAtendimentoAtualizado))
+      .catch((error) => res.status(400).json(error.message));
   }
-  deletar(id) {
-    return atendimentoModel.deletar(id)
+  deletar(req, res) {
+    const { id } = req.params;
+    const atendimento = atendimentoModel.deletar(id);
+    return atendimento.then((resultAtendimentoDel) => res.status(200).json(resultAtendimentoDel)).
+      catch((error) => res.status(400).json(error.message));
   }
 }
 

@@ -1,60 +1,35 @@
 const conexao = require("../infraestrutura/conexao");
 
 class AtendimentoModel {
-  listar() {
-    const sql = `SELECT * FROM atendimentos`;
+  executaQuery(sql, parametros = "") {
     return new Promise((resolve, reject) => {
-      conexao.query(sql, {}, (error, resposta) => {
+      conexao.query(sql, parametros, (error, resposta) => {
         if (error) {
-          console.log("Erro no listar...");
-          reject(error);
+          return reject(error);
         }
-        console.log("Show!");
-        resolve(resposta);
+        return resolve(resposta);
       })
     })
+  }
+
+  listar() {
+    const sql = `SELECT * FROM atendimentos`;
+    return this.executaQuery(sql);
   }
 
   criar(novoAtendimento) {
     const sql = `INSERT INTO atendimentos SET ?`;
-    return new Promise((resolve, reject) => {
-      conexao.query(sql, novoAtendimento, (error, resposta) => {
-        if (error) {
-          console.log("Erro ao criar novo atendimento...");
-          reject(error);
-        }
-        console.log("Atendimento criado com sucesso!");
-        resolve(resposta);
-      })
-    })
+    return this.executaQuery(sql, novoAtendimento)
   }
 
   atualizar(atendimentoAtualizado, id) {
     const sql = `UPDATE atendimentos SET ? WHERE id = ?`;
-    return new Promise((resolve, reject) => {
-      conexao.query(sql, [atendimentoAtualizado, id], (error, resposta) => {
-        if (error) {
-          console.log("Erro ao atualizar atendimento...");
-          reject(error);
-        }
-        console.log("Atendimento atualizado com sucesso!");
-        resolve(resposta);
-      })
-    })
+    return this.executaQuery(sql, [atendimentoAtualizado, id]);
   }
 
   deletar(id) {
-    const sql = `DELETE FROM atendimentos WHERE id = ?`
-    return new Promise((resolve, reject) => {
-      conexao.query(sql, id, (error, resposta) => {
-        if (error) {
-          console.log("Erro ao deletar atendimento");
-          reject(error)
-        }
-        console.log("Atendimento deletado com sucesso");
-        resolve(resposta);
-      })
-    })
+    const sql = `DELETE FROM atendimentos WHERE id = ?`;
+    return this.executaQuery(sql, id);
   }
 
 }
