@@ -6,26 +6,32 @@ const atendimentoController = require("../controllers/atendimentoController");
 // get post put delete
 
 router.get("/atendimentos", (req, res) => {
-  const resposta = atendimentoController.buscar(); //integrando controller
-  res.send(resposta);
+  const listaAtendimentos = atendimentoController.buscar(); //integrando controller
+  listaAtendimentos.then(atendimentos => res.status(200).json(atendimentos))
+    .catch(error => res.status(400).json(error.message))
 });
 
 router.post("/atendimentos", (req, res) => {
-  const resposta = atendimentoController.criar();
-  res.send(resposta);
+  const novoAtendimento = req.query; //req.body não estava funcionando
+  const atendimento = atendimentoController.criar(novoAtendimento);
+  atendimento.then(atendimentoCriado => res.status(201).json(atendimentoCriado))
+    .catch(error => res.status(400).json(error.message));
 })
 
 
 router.put("/atendimento/:id", (req, res) => {
   const { id } = req.params;
-  const resposta = atendimentoController.atualizar(id);
-  res.send(resposta);
+  const atendimentoAtualizado = req.query;
+  const atendimento = atendimentoController.atualizar(atendimentoAtualizado, id);
+  atendimento.then((resultAtendimentoAtualizado) => res.status(200).json(resultAtendimentoAtualizado))
+    .catch((error) => res.status(400).json(error.message));
 })
 
 router.delete("/atendimento/:id", (req, res) => {
   const { id } = req.params;
-  const resposta = atendimentoController.deletar(id);
-  res.send(resposta);
+  const atendimento = atendimentoController.deletar(id);
+  atendimento.then((resultAtendimentoDel) => res.status(200).json(resultAtendimentoDel)).
+    catch((error) => res.status(400).json(error.message));
 })
 
 module.exports = router;
